@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  cassandra:
+    image: docker.io/bitnami/cassandra:latest
+    ports:
+      - '9042:9042'
+    environment:
+      - CASSANDRA_SEEDS=cassandra
+      - CASSANDRA_PASSWORD_SEEDER=yes
+      - CASSANDRA_CFG_RACKDC_PREFER_LOCAL=true
+      
+  loanapplication:
+    ports:
+      - 8085:8085
+    build:
+      context: ../
+      args:
+        JAR_FILE: /loanapplicatipn-0.0.1-SNAPSHOT.jar
+    restart: always
+    depends_on:
+        - "cassandra"
+ 
+  
+networks:
+  default:
+    driver: bridge
